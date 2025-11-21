@@ -41,9 +41,27 @@ export default function TaskBaoard() {
     setShowAddModal(true);
   }
 
-  function handleCloseClick(){
-    setShowAddModal(false)
-    setTaskToUpdate(null)
+  function handleDeleteTask(taskId) {
+    const taskAfterDelete = tasks.filter((task) => task.id !== taskId);
+    setTasks(taskAfterDelete);
+  }
+
+  function handleDeleteAllClick() {
+    tasks.length = 0;
+    console.log("tasks length", tasks.length);
+    setTasks([...tasks]);
+  }
+
+  function handleCloseClick() {
+    setShowAddModal(false);
+    setTaskToUpdate(null);
+  }
+
+  function handleFavorite(taskId) {
+    const taskIndex = tasks.findIndex(task => task.id === taskId)
+    const newTasks = [...tasks]
+    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite
+    setTasks(newTasks)
   }
 
   return (
@@ -61,9 +79,15 @@ export default function TaskBaoard() {
         </div>
         <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
           <TaskActions
-            handleAddTask={() => setShowAddModal(true)}
+            onAddClick={() => setShowAddModal(true)}
+            onDeleteAllClick={handleDeleteAllClick}
           ></TaskActions>
-          <TaskList tasks={tasks} onEdit={handleEditTask}></TaskList>
+          <TaskList
+            tasks={tasks}
+            onEdit={handleEditTask}
+            onDelete={handleDeleteTask}
+            onFav={handleFavorite}
+          ></TaskList>
         </div>
       </div>
     </section>
