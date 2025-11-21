@@ -58,10 +58,18 @@ export default function TaskBaoard() {
   }
 
   function handleFavorite(taskId) {
-    const taskIndex = tasks.findIndex(task => task.id === taskId)
-    const newTasks = [...tasks]
-    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite
-    setTasks(newTasks)
+    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+    const newTasks = [...tasks];
+    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite;
+    setTasks(newTasks);
+  }
+
+  function handleSearch(searchTerm) {
+    console.log("search", searchTerm);
+    const filtered = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setTasks([...filtered]);
   }
 
   return (
@@ -75,7 +83,7 @@ export default function TaskBaoard() {
       )}
       <div className="container">
         <div className="p-2 flex justify-end">
-          <SearchTask></SearchTask>
+          <SearchTask onSearch={handleSearch}></SearchTask>
         </div>
         <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
           <TaskActions
