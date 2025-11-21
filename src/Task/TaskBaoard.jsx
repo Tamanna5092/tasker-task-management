@@ -16,16 +16,45 @@ export default function TaskBaoard() {
 
   const [tasks, setTasks] = useState([defaultTask]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [taskToUpdate, setTaskToUpdate] = useState(null);
 
-  function handleAddTask(newTask) {
+  function handleAddEditTask(newTask, isAdd) {
     console.log("add task", newTask);
-    setTasks([...tasks, newTask])
+    if (isAdd) {
+      setTasks([...tasks, newTask]);
+    } else {
+      setTasks(
+        tasks.map((task) => {
+          if (task.id === newTask.id) {
+            return newTask;
+          }
+          return task;
+        })
+      );
+    }
+    setShowAddModal(false);
+  }
+
+  function handleEditTask(task) {
+    console.log("edit task", task);
+    setTaskToUpdate(task);
+    setShowAddModal(true);
+  }
+
+  function handleCloseClick(){
     setShowAddModal(false)
+    setTaskToUpdate(null)
   }
 
   return (
     <section className="mb-20 container lg:px-20" id="tasks">
-      {showAddModal && <AddTaskModal onSave={handleAddTask}></AddTaskModal>}
+      {showAddModal && (
+        <AddTaskModal
+          onSave={handleAddEditTask}
+          onCloseClick={handleCloseClick}
+          taskToUpdate={taskToUpdate}
+        ></AddTaskModal>
+      )}
       <div className="container">
         <div className="p-2 flex justify-end">
           <SearchTask></SearchTask>
@@ -34,7 +63,7 @@ export default function TaskBaoard() {
           <TaskActions
             handleAddTask={() => setShowAddModal(true)}
           ></TaskActions>
-          <TaskList tasks={tasks}></TaskList>
+          <TaskList tasks={tasks} onEdit={handleEditTask}></TaskList>
         </div>
       </div>
     </section>
